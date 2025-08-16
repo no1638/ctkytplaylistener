@@ -289,10 +289,12 @@ class App(CTk):
         if len(self.currentQueue) > 0:
             self.currentQueue = []
         redownload = False
+        playlistURL = None
 
         if promptURL == True or not os.path.exists(f"sd/playlists/{self._playlistTitle}"):
             self.playlistEntryDiag = CTkInputDialog(text="Enter Playlist URL > ", title="Youtube Playlist Downloader")
-            self.currentPlaylist = Playlist(self.playlistEntryDiag.get_input())
+            playlistURL = self.playlistEntryDiag.get_input()
+            self.currentPlaylist = Playlist(playlistURL)
             self._playlistTitle = self.currentPlaylist.title
         if promptURL == False:
             self._playlistTitle = selectedTitle
@@ -302,6 +304,12 @@ class App(CTk):
             redownloadIn = self.redownloadEntryDiag.get_input()
             if redownloadIn.lower() == "y":
                 redownload = True
+                with open(f"sd/playlists/{self._playlistTitle}/roster.txt", "r") as f:
+                    playlistURL = f.read().split("\n")[-1]
+                    f.close()
+                self.currentPlaylist = Playlist(playlistURL)
+                self._playlistTitle = self.currentPlaylist.title
+
         
         
 
@@ -328,6 +336,7 @@ class App(CTk):
                 with open("roster.txt", "w") as f:
                     for videoTitle in videoTitles:
                         f.write(f"{videoTitle}\n")
+                    f.write(playlistURL)
                     f.close()
 
             for file in os.listdir(os.getcwd()):
