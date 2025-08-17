@@ -90,6 +90,11 @@ class App(CTk):
         self.playlistSelectMenu = CTkOptionMenu(master=self.topWrapper, width=88, command=self.playlistProxyHandler)
         self.playlistSelectMenu.place(x=175, y=0)
 
+        self.volumeInputSlider = CTkSlider(master=self.topWrapper, from_=0, to=10, number_of_steps=10, orientation="horizontal", width=156, command=self.setVolume)
+        self.volumeInputSlider.place(x=0, y=6)
+        self.volumeLabel = CTkLabel(master=self.topWrapper, text=f"Volume", font=CTkFont(size=13, weight="normal"))
+        self.volumeLabel.place(x=7, y=20)
+
         optvalues = []
         for item in os.listdir(f"sd/playlists"):
             if os.path.isdir(f"sd/playlists/{item}"):
@@ -414,22 +419,14 @@ class App(CTk):
                 pygame.mixer.music.unpause()
 
 
-    def setVolume(self):
+    def setVolume(self, value):
         pygame.mixer.music.pause()
-        UIvolumeInput = input("Input 0-10 > ")
-        try:
-            UIvolumeInput = int(UIvolumeInput)
-            if UIvolumeInput <= 10 and UIvolumeInput >= 0:
-                _currentVolume = UIvolumeInput
-            else:
-                self.showError("8_UIvolumeInput_ValErr", True, UIvolumeInput)
-        except:
-            pass
-        level = UIvolumeInput
-        converted_volume = level / 10.0
-
+        UIvolumeInput = value
+        _currentVolume = value
+        converted_volume = UIvolumeInput / 10.0
         pygame.mixer.music.set_volume(converted_volume)
         pygame.mixer.music.unpause()
+        self.update()
 
     def songButtonOnClick(self, widget):
         selectedTitle = widget.cget("text")
