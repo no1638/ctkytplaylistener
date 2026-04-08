@@ -1,1 +1,0 @@
-the program converts downloaded .mp3 files into .ogg for better playability
