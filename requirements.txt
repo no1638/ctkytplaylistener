@@ -1,4 +1,0 @@
-pygame
-pytubefix
-customtkinter
-pillow
